@@ -39,3 +39,14 @@
   aos órgãos e excluindo logotipos, elementos gráficos e obras de terceiros.
 - Completado o registro das 12 fontes antes descobertas dinamicamente para que
   futuros releases não dependam de políticas implícitas.
+
+## 2026-08-31T15:09:36Z
+
+- Publicado no GitHub Releases o snapshot `2026.08.31` com 26.816 proposições,
+  18 fontes, 122 arquivos públicos e 66,8 MB, após validação independente pelo
+  workflow de publicação.
+- O release público foi carregado no PostgreSQL/pgvector de staging e ficou
+  disponível para consulta pela API REST e pelo MCP.
+- REST e MCP passaram a resolver `manifest.json` explicitamente, já que o
+  manifesto não pode conter o próprio checksum sem criar uma referência
+  recursiva.

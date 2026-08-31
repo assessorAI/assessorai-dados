@@ -113,12 +113,18 @@ def get_release_download(version: str, asset_name: str):
         raise HTTPException(status_code=404, detail="release_not_found")
     if not release["manifest"].get("publishable", False):
         raise HTTPException(status_code=409, detail="release_not_publishable")
-    assets = {item["name"]: item for item in release["manifest"].get("assets", [])}
-    if asset_name not in assets:
-        raise HTTPException(status_code=404, detail="asset_not_found")
     repository = get_settings().github_data_repository
     tag = "latest" if version == "latest" else release["version"]
     prefix = "releases/latest/download" if tag == "latest" else f"releases/download/{tag}"
+    if asset_name == "manifest.json":
+        return {
+            "name": asset_name,
+            "media_type": "application/json",
+            "url": f"https://github.com/{repository}/{prefix}/{asset_name}",
+        }
+    assets = {item["name"]: item for item in release["manifest"].get("assets", [])}
+    if asset_name not in assets:
+        raise HTTPException(status_code=404, detail="asset_not_found")
     return {**assets[asset_name], "url": f"https://github.com/{repository}/{prefix}/{asset_name}"}
 
 

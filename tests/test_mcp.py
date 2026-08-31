@@ -32,3 +32,19 @@ def test_preview_release_cannot_advertise_public_download(monkeypatch):
         "error": "release_not_publishable",
         "version": "2026.08.31",
     }
+
+
+def test_manifest_download_does_not_require_self_referential_asset(monkeypatch):
+    class PublishedRepository:
+        def get_release(self, version):
+            return {
+                "version": "2026.08.31",
+                "manifest": {"publishable": True, "assets": []},
+            }
+
+    monkeypatch.setattr(
+        "assessorai_dados.mcp_server.get_repository", lambda: PublishedRepository()
+    )
+
+    result = get_dataset_download("manifest.json")
+    assert result["url"].endswith("/releases/latest/download/manifest.json")

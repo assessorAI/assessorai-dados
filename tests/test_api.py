@@ -40,7 +40,7 @@ class FakeRepository:
             "version": "2026.08.31",
             "manifest": {
                 "publishable": True,
-                "assets": [{"name": "manifest.json", "sha256": "abc"}],
+                "assets": [],
             },
         }
 
