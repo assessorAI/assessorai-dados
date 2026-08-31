@@ -265,8 +265,11 @@ def create_repository(settings: Settings | None = None) -> LegislativeRepository
 
 
 def apply_migrations(engine: Engine, migrations_dir: Path) -> None:
+    migration_paths = sorted(migrations_dir.glob("*.sql"))
+    if not migration_paths:
+        raise FileNotFoundError(f"no SQL migrations found in {migrations_dir}")
     with engine.begin() as connection:
-        for path in sorted(migrations_dir.glob("*.sql")):
+        for path in migration_paths:
             connection.exec_driver_sql(path.read_text(encoding="utf-8"))
 
 

@@ -22,3 +22,6 @@
   Psycopg 3 e aplica migrações pela rede privada antes de iniciar a API.
 - Migrada a configuração de deploy para Railway Config as Code e validado o
   novo entrypoint com lint, testes e build local do container.
+- O primeiro smoke test de staging detectou que o CLI instalado resolvia um
+  diretório de migrações vazio. O entrypoint passou a usar o caminho absoluto
+  do container, e a ausência de SQLs agora interrompe o deploy explicitamente.

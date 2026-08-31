@@ -28,6 +28,12 @@ def test_railway_database_url_selects_psycopg3():
     )
 
 
+def test_migrations_fail_when_directory_is_empty(tmp_path):
+    engine = create_engine("sqlite://")
+    with pytest.raises(FileNotFoundError, match="no SQL migrations found"):
+        apply_migrations(engine, tmp_path)
+
+
 @pytest.mark.skipif(not os.getenv("TEST_DATABASE_URL"), reason="TEST_DATABASE_URL is not set")
 def test_release_can_rebuild_search_database(tmp_path):
     database_url = os.environ["TEST_DATABASE_URL"]
