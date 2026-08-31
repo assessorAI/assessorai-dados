@@ -71,6 +71,9 @@ uv run assessorai-data load-db dist/2026.08.31
 
 A aplicação utiliza `DATABASE_URL`. O usuário usado pela API/MCP em produção
 deve possuir apenas `CONNECT`, `USAGE` no schema e `SELECT` nas tabelas.
+O entrypoint do container aplica migrações antes de iniciar a API; em produção,
+use uma credencial de migração no deploy e troque a credencial de runtime por
+um usuário somente leitura após a carga do release.
 
 ## API REST
 

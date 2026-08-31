@@ -5,13 +5,27 @@ import pytest
 from sqlalchemy import create_engine
 
 from assessorai_dados.canonical import load_source_policies, reconcile_records
-from assessorai_dados.database import LegislativeRepository, apply_migrations, load_release
+from assessorai_dados.database import (
+    LegislativeRepository,
+    apply_migrations,
+    load_release,
+    normalize_database_url,
+)
 from assessorai_dados.inputs import iter_input_records
 from assessorai_dados.models import SearchFilters
 from assessorai_dados.release import build_release
 from assessorai_dados.settings import Settings
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_railway_database_url_selects_psycopg3():
+    assert normalize_database_url("postgresql://user:pass@host/db") == (
+        "postgresql+psycopg://user:pass@host/db"
+    )
+    assert normalize_database_url("postgres://user:pass@host/db") == (
+        "postgresql+psycopg://user:pass@host/db"
+    )
 
 
 @pytest.mark.skipif(not os.getenv("TEST_DATABASE_URL"), reason="TEST_DATABASE_URL is not set")

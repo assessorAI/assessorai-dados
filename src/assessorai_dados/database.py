@@ -14,6 +14,14 @@ from .models import ReleaseManifest, SearchFilters, SearchResult
 from .settings import Settings, get_settings
 
 
+def normalize_database_url(url: str) -> str:
+    if url.startswith("postgresql://"):
+        return "postgresql+psycopg://" + url.removeprefix("postgresql://")
+    if url.startswith("postgres://"):
+        return "postgresql+psycopg://" + url.removeprefix("postgres://")
+    return url
+
+
 def encode_cursor(offset: int) -> str:
     return base64.urlsafe_b64encode(json.dumps({"offset": offset}).encode()).decode().rstrip("=")
 
@@ -250,7 +258,10 @@ class LegislativeRepository:
 
 def create_repository(settings: Settings | None = None) -> LegislativeRepository:
     settings = settings or get_settings()
-    return LegislativeRepository(create_engine(settings.database_url, pool_pre_ping=True), settings)
+    return LegislativeRepository(
+        create_engine(normalize_database_url(settings.database_url), pool_pre_ping=True),
+        settings,
+    )
 
 
 def apply_migrations(engine: Engine, migrations_dir: Path) -> None:

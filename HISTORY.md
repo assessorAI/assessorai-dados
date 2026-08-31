@@ -13,3 +13,12 @@
   promoção como esperado.
 - Validada a reconstrução do índice em PostgreSQL 17 com pgvector, incluindo
   migrações, carga, busca, paginação de texto, fontes e resolução de releases.
+
+## 2026-08-31T14:15:22Z
+
+- Preparado o ambiente isolado de staging no Railway, com serviço de API,
+  PostgreSQL e domínio público próprios, sem alterar o Assessoraí existente.
+- O container agora normaliza URLs PostgreSQL do Railway para o driver
+  Psycopg 3 e aplica migrações pela rede privada antes de iniciar a API.
+- Migrada a configuração de deploy para Railway Config as Code e validado o
+  novo entrypoint com lint, testes e build local do container.

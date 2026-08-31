@@ -8,6 +8,7 @@ WORKDIR /app
 COPY pyproject.toml README.md ./
 COPY src ./src
 COPY migrations ./migrations
+COPY scripts/entrypoint.sh ./scripts/entrypoint.sh
 RUN pip install --no-cache-dir .
 
-CMD ["sh", "-c", "uvicorn assessorai_dados.api:app --host 0.0.0.0 --port ${PORT}"]
+CMD ["./scripts/entrypoint.sh"]

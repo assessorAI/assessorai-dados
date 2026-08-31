@@ -8,7 +8,7 @@ from pathlib import Path
 from sqlalchemy import create_engine
 
 from .canonical import load_source_policies, reconcile_records
-from .database import apply_migrations, load_release
+from .database import apply_migrations, load_release, normalize_database_url
 from .inputs import iter_input_records
 from .release import build_release
 from .settings import get_settings
@@ -46,13 +46,13 @@ def _validate(args: argparse.Namespace) -> None:
 
 
 def _migrate(args: argparse.Namespace) -> None:
-    engine = create_engine(args.database_url)
+    engine = create_engine(normalize_database_url(args.database_url))
     apply_migrations(engine, args.migrations)
     print("migrations applied")
 
 
 def _load(args: argparse.Namespace) -> None:
-    engine = create_engine(args.database_url)
+    engine = create_engine(normalize_database_url(args.database_url))
     count = load_release(
         engine,
         args.release_dir,
