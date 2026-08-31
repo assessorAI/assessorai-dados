@@ -26,9 +26,10 @@ uv sync --extra dev
 
 ## Construir uma prévia local
 
-As fontes começam com `redistribution_status=pending`. A opção
+Fontes novas começam com `redistribution_status=pending`. A opção
 `--allow-pending` existe somente para validação em staging e não autoriza a
-publicação.
+publicação. As fontes legislativas atualmente cadastradas foram revisadas sob
+o art. 8º, IV, da Lei 9.610/1998, que exclui atos oficiais da proteção autoral.
 
 ```bash
 uv run assessorai-data build \
@@ -41,9 +42,9 @@ uv run assessorai-data build \
 uv run assessorai-data validate-release dist/2026.08.31
 ```
 
-Para um release publicável, atualize `config/sources.json` com `terms_url`,
-`source_license` e um status explícito `allowed` ou `metadata_only`, depois
-construa sem `--allow-pending`.
+Para um release publicável, atualize `config/sources.json` com a base de
+redistribuição, atribuição, revisor e um status explícito `allowed` ou
+`metadata_only`, depois construa sem `--allow-pending`.
 
 ## Publicar no GitHub Releases
 

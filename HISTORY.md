@@ -31,3 +31,11 @@
 - Após os smoke tests, a carga temporária foi removida do PostgreSQL público de
   staging porque todas as fontes continuam com redistribuição pendente. Os
   assets validados permanecem locais e permitem reconstruir o índice.
+
+## 2026-08-31T15:00:00Z
+
+- Aprovada editorialmente a redistribuição dos textos legislativos das 18
+  fontes com fundamento no art. 8º, IV, da Lei 9.610/1998, mantendo atribuição
+  aos órgãos e excluindo logotipos, elementos gráficos e obras de terceiros.
+- Completado o registro das 12 fontes antes descobertas dinamicamente para que
+  futuros releases não dependam de políticas implícitas.

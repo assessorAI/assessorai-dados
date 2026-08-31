@@ -2,6 +2,7 @@ from pathlib import Path
 
 from assessorai_dados.canonical import load_source_policies, reconcile_records
 from assessorai_dados.inputs import iter_input_records
+from assessorai_dados.models import SourcePolicy
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -21,7 +22,13 @@ def test_reconcile_is_deterministic_and_merges_duplicates():
 
 
 def test_pending_source_is_quarantined_by_default():
-    policies = load_source_policies(ROOT / "config" / "sources.json")
+    policies = [
+        SourcePolicy(
+            id="pending-source",
+            name="Pending source",
+            house="Câmara Municipal de São Paulo",
+        )
+    ]
     inputs = [ROOT / "tests" / "fixtures" / "source.json"]
     propositions, log = reconcile_records(iter_input_records(inputs), policies)
 

@@ -18,6 +18,9 @@ class SourcePolicy(BaseModel):
     municipality: str | None = None
     terms_url: str | None = None
     source_license: str | None = None
+    redistribution_basis: str | None = None
+    reviewed_at: date | None = None
+    reviewed_by: str | None = None
     redistribution_status: RedistributionStatus = "pending"
     attribution: str | None = None
 
