@@ -50,3 +50,10 @@
 - REST e MCP passaram a resolver `manifest.json` explicitamente, já que o
   manifesto não pode conter o próprio checksum sem criar uma referência
   recursiva.
+
+## 2026-08-31T15:31:36Z
+
+- O README foi reorganizado como guia de uso, priorizando conexão MCP,
+  downloads, consultas REST, exemplos e limites do serviço.
+- Arquitetura, modelo canônico, pipeline, releases, banco, busca, contrato MCP,
+  segurança e operação foram movidos para `docs/TECHNICAL.md`.

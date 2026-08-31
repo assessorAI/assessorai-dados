@@ -1,135 +1,127 @@
 # AssessorAI Dados Legislativos
 
-Corpus, API REST e servidor MCP públicos para proposições legislativas
-brasileiras. O GitHub Releases é a fonte dos snapshots imutáveis; o PostgreSQL
-com pgvector é um índice reconstruível usado para consultas.
+Dados abertos de proposições legislativas brasileiras para pesquisadores,
+desenvolvedores e agentes de IA.
 
-## Arquitetura
+## Como usar
 
-```text
-crawler JSON ─┐
-OCR exports ──┼─> canonicalização ─> GitHub Release ─> PostgreSQL/pgvector
-pgvector dump ┘        │                    │                   │
-                  reconciliação       Parquet/JSONL/CSV      REST + MCP
-```
+Escolha a interface mais adequada:
 
-O pipeline nunca lê tabelas operacionais de usuários, mandatos, demandas ou
-auditoria. Cada entrada termina classificada como `published`, `deduplicated`
-ou `quarantined` no arquivo `reconciliation.jsonl.zst`.
+| Quero... | Use |
+|---|---|
+| conectar um agente de IA | MCP: `https://api-staging-aa9d.up.railway.app/mcp/` |
+| pesquisar pela web ou por código | [API REST e Swagger](https://api-staging-aa9d.up.railway.app/docs) |
+| analisar o corpus completo | [GitHub Release mais recente](https://github.com/assessorAI/assessorai-dados/releases/latest) |
+| entender arquitetura e formatos | [Especificações técnicas](docs/TECHNICAL.md) |
 
-## Ambiente local no NixOS
+O acesso é público e somente leitura. Não é necessário fornecer credenciais
+para o uso normal.
 
-```bash
-nix develop
-uv sync --extra dev
-```
+### Conectar um agente pelo MCP
 
-## Construir uma prévia local
-
-Fontes novas começam com `redistribution_status=pending`. A opção
-`--allow-pending` existe somente para validação em staging e não autoriza a
-publicação. As fontes legislativas atualmente cadastradas foram revisadas sob
-o art. 8º, IV, da Lei 9.610/1998, que exclui atos oficiais da proteção autoral.
-
-```bash
-uv run assessorai-data build \
-  /home/markun/devel/legisla/assessorai-pdftomd/data \
-  /home/markun/devel/legisla/assessorai-crawler/storage/output \
-  --release 2026.08.31 \
-  --output dist/2026.08.31 \
-  --allow-pending
-
-uv run assessorai-data validate-release dist/2026.08.31
-```
-
-Para um release publicável, atualize `config/sources.json` com a base de
-redistribuição, atribuição, revisor e um status explícito `allowed` ou
-`metadata_only`, depois construa sem `--allow-pending`.
-
-## Publicar no GitHub Releases
-
-1. Gere e valide o diretório do release.
-2. Crie um draft e envie os assets:
-
-   ```bash
-   uv run assessorai-data upload-draft dist/2026.08.31 \
-     --repository assessorAI/assessorai-dados
-   ```
-
-3. Execute manualmente o workflow `Validate and publish dataset release` com a
-   tag. O workflow baixa novamente os assets, valida formatos, contagens e
-   checksums e somente então publica o release como `latest`.
-
-Assets maiores devem ser particionados para permanecer abaixo de 2 GiB. Dados
-grandes não são commitados e Git LFS não é usado.
-
-## Banco de busca
-
-```bash
-uv run assessorai-data migrate
-uv run assessorai-data load-db dist/2026.08.31
-```
-
-A aplicação utiliza `DATABASE_URL`. O usuário usado pela API/MCP em produção
-deve possuir apenas `CONNECT`, `USAGE` no schema e `SELECT` nas tabelas.
-O entrypoint do container aplica migrações antes de iniciar a API; em produção,
-use uma credencial de migração no deploy e troque a credencial de runtime por
-um usuário somente leitura após a carga do release.
-
-## API REST
-
-```bash
-uv run uvicorn assessorai_dados.api:app --reload
-```
-
-Principais endpoints:
-
-- `GET /v1/propositions`
-- `GET /v1/propositions/{id}`
-- `GET /v1/propositions/{id}/text`
-- `GET /v1/propositions/{id}/related`
-- `GET /v1/sources`
-- `GET /v1/datasets/releases`
-- `GET /v1/datasets/releases/{version}`
-
-Consultas públicas recebem 60 requisições por minuto por IP. Chaves opcionais
-são enviadas em `X-API-Key`; o ambiente armazena somente seus hashes SHA-256 em
-`PUBLIC_API_KEY_HASHES`.
-
-## MCP
-
-O endpoint Streamable HTTP fica em `http://localhost:8000/mcp`. Ferramentas:
-
-- `search_propositions`
-- `get_proposition`
-- `read_proposition_text`
-- `find_related_propositions`
-- `list_sources`
-- `get_dataset_release`
-- `get_dataset_download`
-
-Exemplo de configuração:
+Adicione este servidor à configuração de um cliente compatível com MCP
+Streamable HTTP:
 
 ```json
 {
   "mcpServers": {
     "assessorai-dados": {
       "type": "http",
-      "url": "https://SEU-DOMINIO/mcp"
+      "url": "https://api-staging-aa9d.up.railway.app/mcp/"
     }
   }
 }
 ```
 
-Resultados carregam o UUID, a versão do dataset, proveniência e URLs oficiais
-para que agentes possam citar a fonte original.
+Depois de conectado, o agente passa a enxergar sete ferramentas:
 
-## Branches e deploy
+| Ferramenta | Para que serve |
+|---|---|
+| `search_propositions` | busca por texto, identificador, casa, localidade, tipo, ano ou autor |
+| `get_proposition` | retorna metadados e proveniência de uma proposição |
+| `read_proposition_text` | lê o texto integral em páginas, sem estourar o contexto do agente |
+| `find_related_propositions` | encontra proposições relacionadas |
+| `list_sources` | lista casas legislativas, atribuição e situação de redistribuição |
+| `get_dataset_release` | retorna versão, cobertura e manifesto do dataset |
+| `get_dataset_download` | produz o link público de um arquivo no GitHub Releases |
 
-- `dev`: desenvolvimento.
-- `staging`: validação Railway e releases de prévia.
-- `production`: serviço público estável.
+Exemplos de pedidos que podem ser feitos ao agente:
 
-Não promova `staging` para `production` sem teste explícito do ambiente de
-staging. O serviço deve usar um projeto/serviço Railway separado do backend do
-Assessoraí.
+```text
+Encontre projetos de lei sobre dados abertos apresentados em 2024.
+
+Leia o texto do projeto encontrado e me mostre a URL oficial e a versão do dataset.
+
+Quais proposições são relacionadas a este UUID?
+
+Me dê o link do JSONL completo da release mais recente.
+```
+
+O fluxo é simples: o agente escolhe uma ferramenta, o MCP consulta o índice
+PostgreSQL/pgvector e devolve dados estruturados. Textos longos são paginados.
+Arquivos completos não passam pelo servidor: `get_dataset_download` aponta
+diretamente para os assets públicos e imutáveis no GitHub.
+
+### Baixar todos os dados
+
+Release atual: [`2026.08.31`](https://github.com/assessorAI/assessorai-dados/releases/tag/2026.08.31),
+com 26.816 proposições de 18 fontes.
+
+```bash
+# Manifesto, cobertura, fontes e checksums
+curl -L -o manifest.json \
+  https://github.com/assessorAI/assessorai-dados/releases/latest/download/manifest.json
+
+# Corpus canônico completo em JSON Lines + Zstandard
+curl -L -o propositions.jsonl.zst \
+  https://github.com/assessorAI/assessorai-dados/releases/latest/download/propositions--part-0000.jsonl.zst
+
+# Metadados tabulares
+curl -L -o metadata.csv.zst \
+  https://github.com/assessorAI/assessorai-dados/releases/latest/download/metadata--part-0000.csv.zst
+```
+
+Os arquivos Parquet são separados deterministicamente por casa e ano e podem
+ser baixados na página da release. Comece pelo `manifest.json`: ele contém o
+SHA-256, tamanho, formato e número de linhas de cada asset.
+
+### Consultar pela API REST
+
+Busca textual com filtros:
+
+```bash
+curl --get 'https://api-staging-aa9d.up.railway.app/v1/propositions' \
+  --data-urlencode 'query=dados abertos' \
+  --data-urlencode 'year=2024' \
+  --data-urlencode 'limit=10'
+```
+
+Outros pontos de entrada úteis:
+
+```text
+GET /v1/propositions/{id}
+GET /v1/propositions/{id}/text?offset=0&max_chars=20000
+GET /v1/propositions/{id}/related
+GET /v1/sources
+GET /v1/datasets/releases
+GET /v1/datasets/releases/latest
+GET /v1/datasets/releases/latest/download/{asset_name}
+```
+
+A paginação de buscas usa `next_cursor`. O texto integral usa `offset` e
+`next_offset`. Respostas incluem a versão do dataset e preservam URLs oficiais
+e proveniência.
+
+### Limites e licença
+
+- Acesso público: 60 chamadas por minuto por IP.
+- Chaves opcionais podem receber limites maiores.
+- A compilação é distribuída sob CC BY 4.0.
+- Textos legislativos e atos oficiais são tratados conforme o art. 8º, IV, da
+  [Lei 9.610/1998](https://www.planalto.gov.br/ccivil_03/leis/l9610.htm).
+- Logotipos, fotografias, elementos gráficos e obras de terceiros não fazem
+  parte do corpus redistribuído.
+
+Para schemas, construção de releases, busca híbrida, banco, segurança,
+variáveis de ambiente e deploy, consulte as
+[especificações técnicas](docs/TECHNICAL.md).
