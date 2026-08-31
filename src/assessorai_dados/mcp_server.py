@@ -95,6 +95,8 @@ def get_dataset_download(asset_name: str, version: str = "latest") -> dict[str, 
     if not release:
         return {"error": "release_not_found", "version": version}
     manifest = release["manifest"]
+    if not manifest.get("publishable", False):
+        return {"error": "release_not_publishable", "version": release["version"]}
     assets = {item["name"]: item for item in manifest.get("assets", [])}
     if asset_name not in assets:
         return {"error": "asset_not_found", "asset_name": asset_name, "available": sorted(assets)}

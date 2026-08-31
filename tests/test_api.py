@@ -38,7 +38,10 @@ class FakeRepository:
     def get_release(self, version):
         return {
             "version": "2026.08.31",
-            "manifest": {"assets": [{"name": "manifest.json", "sha256": "abc"}]},
+            "manifest": {
+                "publishable": True,
+                "assets": [{"name": "manifest.json", "sha256": "abc"}],
+            },
         }
 
 
@@ -51,9 +54,18 @@ def test_rest_api(monkeypatch):
         proposition = client.get("/v1/propositions/id-1")
         text = client.get("/v1/propositions/id-1/text", params={"max_chars": 100})
         download = client.get("/v1/datasets/releases/latest/download/manifest.json")
+        fake.get_release = lambda version: {
+            "version": "2026.08.31",
+            "manifest": {"publishable": False, "assets": [{"name": "manifest.json"}]},
+        }
+        preview_download = client.get(
+            "/v1/datasets/releases/latest/download/manifest.json"
+        )
 
     assert health.json()["release"] == "2026.08.31"
     assert search.json()["items"][0]["title"] == "PL 1/2026"
     assert proposition.status_code == 200
     assert text.json()["text"] == "Art. 1º"
     assert download.json()["url"].endswith("/releases/latest/download/manifest.json")
+    assert preview_download.status_code == 409
+    assert preview_download.json()["detail"] == "release_not_publishable"

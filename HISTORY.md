@@ -25,3 +25,6 @@
 - O primeiro smoke test de staging detectou que o CLI instalado resolvia um
   diretório de migrações vazio. O entrypoint passou a usar o caminho absoluto
   do container, e a ausência de SQLs agora interrompe o deploy explicitamente.
+- Carregada no índice isolado de staging a prévia validada com 26.816
+  proposições. REST e MCP recusam links de download para releases ainda não
+  publicáveis, evitando anunciar assets inexistentes ou sem licença aprovada.

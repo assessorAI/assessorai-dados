@@ -1,6 +1,6 @@
 from mcp import Client
 
-from assessorai_dados.mcp_server import mcp
+from assessorai_dados.mcp_server import get_dataset_download, mcp
 
 
 async def test_mcp_advertises_read_only_tools():
@@ -16,4 +16,19 @@ async def test_mcp_advertises_read_only_tools():
         "list_sources",
         "read_proposition_text",
         "search_propositions",
+    }
+
+
+def test_preview_release_cannot_advertise_public_download(monkeypatch):
+    class PreviewRepository:
+        def get_release(self, version):
+            return {"version": "2026.08.31", "manifest": {"publishable": False}}
+
+    monkeypatch.setattr(
+        "assessorai_dados.mcp_server.get_repository", lambda: PreviewRepository()
+    )
+
+    assert get_dataset_download("manifest.json") == {
+        "error": "release_not_publishable",
+        "version": "2026.08.31",
     }

@@ -111,6 +111,8 @@ def get_release_download(version: str, asset_name: str):
     release = get_repository().get_release(version)
     if not release:
         raise HTTPException(status_code=404, detail="release_not_found")
+    if not release["manifest"].get("publishable", False):
+        raise HTTPException(status_code=409, detail="release_not_publishable")
     assets = {item["name"]: item for item in release["manifest"].get("assets", [])}
     if asset_name not in assets:
         raise HTTPException(status_code=404, detail="asset_not_found")
