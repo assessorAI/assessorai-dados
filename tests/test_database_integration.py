@@ -44,7 +44,6 @@ def test_release_can_rebuild_search_database(tmp_path):
     propositions, reconciliation = reconcile_records(
         iter_input_records([ROOT / "tests" / "fixtures" / "source.json"]),
         policies,
-        allow_pending=True,
     )
     release_dir = tmp_path / "release"
     build_release(propositions, reconciliation, policies, release_dir, "2026.08.31")
@@ -53,7 +52,6 @@ def test_release_can_rebuild_search_database(tmp_path):
             engine,
             release_dir,
             "assessorAI/assessorai-dados",
-            allow_preview=True,
         )
         == 1
     )
@@ -67,4 +65,4 @@ def test_release_can_rebuild_search_database(tmp_path):
     assert repository.get_proposition(proposition_id)["title"] == "Projeto de Lei 123/2025"
     assert repository.read_text(proposition_id, 0, 20)["next_offset"] == 20
     assert repository.get_release("latest")["version"] == "2026.08.31"
-    assert repository.list_sources()[0]["redistribution_status"] == "pending"
+    assert repository.list_sources()[0]["redistribution_status"] == "allowed"
