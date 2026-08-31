@@ -1,0 +1,29 @@
+{
+  "export_info": {"generated_at": "2026-08-31T00:00:00Z"},
+  "items": [
+    {
+      "id": "cms-123-2025",
+      "title": "PL 123/2025",
+      "house": "Câmara Municipal de São Paulo",
+      "type": "PL",
+      "number": 123,
+      "year": 2025,
+      "author": ["Vereadora Ana"],
+      "subject": "Institui política municipal de dados abertos.",
+      "full_text": "Art. 1º Fica instituída a política municipal de dados abertos.",
+      "url": "https://example.invalid/pl/123-2025",
+      "scraped_at": "2026-08-30T12:00:00Z"
+    },
+    {
+      "id": "cms-123-2025-copy",
+      "title": "Projeto de Lei 123/2025",
+      "house": "Câmara Municipal de São Paulo",
+      "type": "PL",
+      "number": "123",
+      "year": "2025",
+      "author": "Vereadora Ana; Vereador Bruno",
+      "subject": "Institui política municipal de dados abertos e transparência.",
+      "url": "https://example.invalid/pl/123-2025"
+    }
+  ]
+}

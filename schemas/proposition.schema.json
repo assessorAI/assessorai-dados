@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/assessorAI/assessorai-dados/blob/dev/schemas/proposition.schema.json",
+  "title": "AssessorAI canonical legislative proposition",
+  "type": "object",
+  "required": ["id", "canonical_key", "country", "house", "title", "content_hash", "provenance"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "canonical_key": {"type": "string"},
+    "country": {"const": "BR"},
+    "jurisdiction_level": {"enum": ["federal", "state", "municipal", "unknown"]},
+    "state": {"type": ["string", "null"]},
+    "municipality": {"type": ["string", "null"]},
+    "house": {"type": "string"},
+    "type": {"type": ["string", "null"]},
+    "number": {"type": ["string", "null"]},
+    "year": {"type": ["integer", "null"]},
+    "title": {"type": "string"},
+    "subject": {"type": ["string", "null"]},
+    "authors": {"type": "array", "items": {"type": "string"}},
+    "presentation_date": {"type": ["string", "null"], "format": "date"},
+    "status": {"type": ["string", "null"]},
+    "full_text": {"type": ["string", "null"]},
+    "source_url": {"type": ["string", "null"]},
+    "text_extraction_method": {"type": ["string", "null"]},
+    "collected_at": {"type": ["string", "null"], "format": "date-time"},
+    "content_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "provenance": {"type": "array", "items": {"type": "object"}}
+  },
+  "additionalProperties": false
+}

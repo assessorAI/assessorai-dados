@@ -1,0 +1,36 @@
+name: Validate and publish dataset release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing draft release tag (YYYY.MM.DD)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --extra dev --locked
+      - name: Download draft assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release download "${{ inputs.tag }}" --dir "dist/${{ inputs.tag }}"
+      - name: Validate checksums, formats and row counts
+        run: >-
+          uv run assessorai-data validate-release "dist/${{ inputs.tag }}"
+          --require-publishable
+      - name: Publish as latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit "${{ inputs.tag }}" --draft=false --prerelease=false --latest

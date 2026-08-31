@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.0.0",
+  "fields": {
+    "id": "UUIDv5 estável da proposição canônica",
+    "canonical_key": "Chave normalizada usada para reconciliação",
+    "country": "País, atualmente BR",
+    "jurisdiction_level": "Esfera federal, estadual, municipal ou desconhecida",
+    "state": "UF quando aplicável",
+    "municipality": "Município quando aplicável",
+    "house": "Casa legislativa",
+    "type": "Tipo da proposição",
+    "number": "Número preservado como texto",
+    "year": "Ano da proposição",
+    "title": "Título oficial ou coletado",
+    "subject": "Ementa ou assunto",
+    "authors": "Lista normalizada de autores",
+    "presentation_date": "Data de apresentação",
+    "status": "Situação registrada na fonte",
+    "full_text": "Texto integral quando disponível e redistribuível",
+    "source_url": "URL oficial preferencial",
+    "text_extraction_method": "Origem ou método de extração do texto",
+    "collected_at": "Momento da coleta mais recente",
+    "content_hash": "SHA-256 do conteúdo canônico",
+    "provenance": "Registros de fonte usados na consolidação"
+  }
+}

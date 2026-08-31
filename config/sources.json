@@ -1,0 +1,65 @@
+[
+  {
+    "id": "camara-municipal-sao-paulo",
+    "name": "Câmara Municipal de São Paulo",
+    "path_patterns": ["sp-sao-paulo", "proposicoescidsp"],
+    "house": "Câmara Municipal de São Paulo",
+    "jurisdiction_level": "municipal",
+    "state": "SP",
+    "municipality": "São Paulo",
+    "redistribution_status": "pending",
+    "attribution": "Câmara Municipal de São Paulo"
+  },
+  {
+    "id": "camara-municipal-fortaleza",
+    "name": "Câmara Municipal de Fortaleza",
+    "path_patterns": ["ce-fortaleza", "proposicoesfortaleza"],
+    "house": "Câmara Municipal de Fortaleza",
+    "jurisdiction_level": "municipal",
+    "state": "CE",
+    "municipality": "Fortaleza",
+    "redistribution_status": "pending",
+    "attribution": "Câmara Municipal de Fortaleza"
+  },
+  {
+    "id": "camara-municipal-belo-horizonte",
+    "name": "Câmara Municipal de Belo Horizonte",
+    "path_patterns": ["mg-belo-horizonte"],
+    "house": "Câmara Municipal de Belo Horizonte",
+    "jurisdiction_level": "municipal",
+    "state": "MG",
+    "municipality": "Belo Horizonte",
+    "redistribution_status": "pending",
+    "attribution": "Câmara Municipal de Belo Horizonte"
+  },
+  {
+    "id": "camara-municipal-rio-de-janeiro",
+    "name": "Câmara Municipal do Rio de Janeiro",
+    "path_patterns": ["rj-rio-de-janeiro", "proposicoescidrj"],
+    "house": "Câmara Municipal do Rio de Janeiro",
+    "jurisdiction_level": "municipal",
+    "state": "RJ",
+    "municipality": "Rio de Janeiro",
+    "redistribution_status": "pending",
+    "attribution": "Câmara Municipal do Rio de Janeiro"
+  },
+  {
+    "id": "camara-dos-deputados",
+    "name": "Câmara dos Deputados",
+    "path_patterns": ["proposicoespcd", "proposicoescn"],
+    "house": "Câmara dos Deputados",
+    "jurisdiction_level": "federal",
+    "redistribution_status": "pending",
+    "attribution": "Câmara dos Deputados"
+  },
+  {
+    "id": "assembleia-legislativa-parana",
+    "name": "Assembleia Legislativa do Paraná",
+    "path_patterns": ["proposicoespr"],
+    "house": "Assembleia Legislativa do Paraná",
+    "jurisdiction_level": "state",
+    "state": "PR",
+    "redistribution_status": "pending",
+    "attribution": "Assembleia Legislativa do Paraná"
+  }
+]
