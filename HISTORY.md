@@ -28,3 +28,6 @@
 - Carregada no índice isolado de staging a prévia validada com 26.816
   proposições. REST e MCP recusam links de download para releases ainda não
   publicáveis, evitando anunciar assets inexistentes ou sem licença aprovada.
+- Após os smoke tests, a carga temporária foi removida do PostgreSQL público de
+  staging porque todas as fontes continuam com redistribuição pendente. Os
+  assets validados permanecem locais e permitem reconstruir o índice.
